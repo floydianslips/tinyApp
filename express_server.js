@@ -1,8 +1,8 @@
 
-var express = require("express");
-var app = express();
-var PORT = 8080; // default port 8080
-
+const express = require("express");
+const app = express();
+const PORT = 8080; // default port 8080
+// const id = 'about';
 app.set('view engine', 'ejs');
 
 var urlDatabase = {
@@ -13,6 +13,11 @@ var urlDatabase = {
 app.get('/urls', (req, res) => {
   let templateVars = { urls: urlDatabase };
   res.render('urls_index', templateVars);
+});
+
+app.get("/urls/:id", (req, res) => {
+  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id]};
+  res.render("urls_show", templateVars);
 });
 
 app.get("/", (req, res) => {
