@@ -4,11 +4,18 @@
   <head>
     <title>TinyApp</title>
   </head>
+
+  <header>
+  <% include partials/_header %>
+
+  </header>
+
   <body>
     <ul>
     <% for(var url in urls) { %>
-      <li><%= url %></li>
+      <li><%= urls[url] + ":    " + url %></li>
     <% } %>
     </ul>
+    <a href=https://joshuadennis.ca>Create a New Shortened URL</a>
   </body>
   </html>
