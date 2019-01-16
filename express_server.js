@@ -48,7 +48,6 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);
   let randomKey = generateRandomString();
   urlDatabase[randomKey] = 'http://' + req.body.longURL;
   res.redirect(`/urls/${randomKey}`);
@@ -56,7 +55,7 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  res.redirect(urlDatabase[req.params.shortURL]);
+  res.redirect(301, urlDatabase[req.params.shortURL]);
 });
 
 app.get("/", (req, res) => {
