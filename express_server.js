@@ -2,8 +2,27 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
-// const id = 'about';
 app.set('view engine', 'ejs');
+
+
+// npm install generate-password --save
+// var generator = require('generate-password');
+ 
+// var password = generator.generate({
+//     length: 10,
+//     numbers: true
+// });
+
+function generateRandomString() { //borrowed from https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 5; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  
+  return text;
+}
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
@@ -21,6 +40,17 @@ app.get('/urls', (req, res) => {
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
+
+
+app.post("/urls", (req, res) => {
+  console.log(req.body);
+  urlDatabase[generateRandomString()] = 'http://' + req.body.longURL;
+  console.log(urlDatabase);
+  res.send("Ok");  
+         // Respond with 'Ok' (we will replace this)
+});
+
+
 
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id]};
