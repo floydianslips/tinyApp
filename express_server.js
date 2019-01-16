@@ -53,10 +53,11 @@ app.post("/urls", (req, res) => {
   urlDatabase[randomKey] = 'http://' + req.body.longURL;
   res.redirect(`/urls/${randomKey}`);
   console.log(urlDatabase);
-  res.send("Ok");  
-         // Respond with 'Ok' (we will replace this)
 });
 
+app.get("/u/:shortURL", (req, res) => {
+  res.redirect(urlDatabase[req.params.shortURL]);
+});
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -73,3 +74,4 @@ app.get("/hello", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
