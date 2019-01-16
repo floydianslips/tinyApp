@@ -49,14 +49,20 @@ app.get("/urls/:id", (req, res) => {
 
 app.post("/urls", (req, res) => {
   let randomKey = generateRandomString();
-  urlDatabase[randomKey] = 'http://' + req.body.longURL;
+  urlDatabase[randomKey] = "http://" + req.body.longURL;
   res.redirect(`/urls/${randomKey}`);
   console.log(urlDatabase);
 });
 
 app.post('/urls/:id/delete', (req, res) => {
   delete urlDatabase[req.params.id];
-  res.redirect(301, '/urls');
+  res.redirect(301, "/urls");
+});
+
+app.post("/urls/:id/update", (req, res) => {
+  // let shortURL = urlDatabase[0];
+  urlDatabase[req.params.id] = "http://" + req.body.longURL;
+  res.redirect(301, "/urls");
 });
 
 app.get("/u/:shortURL", (req, res) => {

@@ -12,12 +12,14 @@
   <body>
     <ul>
     <% for(var url in urls) { %>
-      <li><%= urls[url] + ":    " + url %>
-      <form method="POST" action="/urls/<%= url %>/delete"><button>Delete URL</button></form>
+      <li>
+      <form method="POST" action="/urls/<%= url %>/delete">
+      <%= urls[url] + ":    " + url %>
+      <button>Delete URL</button></form>
       </li>
     <% } %>
     </ul>
-    <a "/url/">Create a New Shortened URL</a>
+    <a href="/urls/">Create a New Shortened URL</a>
     </li>
     </ul>
   </body>

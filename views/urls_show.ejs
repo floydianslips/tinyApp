@@ -10,6 +10,11 @@
   </header>
   
   <body>
-    <h1><%= shortURL + ': ' + longURL %></h1>
-  </body>
+    <h1>ShortURL: <%= shortURL %></h1>
+    <form action="/urls/<%= shortURL %>/update" method="POST">
+    <label for="longURL">Enter New URL Por Favor:</label> 
+    <input id="longURL" type="text" name="longURL" placeholder="http://">
+    <button>Good Vibes</button>
+    </form>
+    </body>
   </html>
