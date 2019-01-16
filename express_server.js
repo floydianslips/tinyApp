@@ -17,7 +17,7 @@ function generateRandomString() { //borrowed from https://stackoverflow.com/ques
   var text = "";
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-  for (var i = 0; i < 5; i++)
+  for (var i = 0; i < 6; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length));
 
   
@@ -42,20 +42,21 @@ app.get("/urls/new", (req, res) => {
 });
 
 
+app.get("/urls/:id", (req, res) => {
+  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id]};
+  res.render("urls_show", templateVars);
+});
+
 app.post("/urls", (req, res) => {
   console.log(req.body);
-  urlDatabase[generateRandomString()] = 'http://' + req.body.longURL;
+  let randomKey = generateRandomString();
+  urlDatabase[randomKey] = 'http://' + req.body.longURL;
+  res.redirect(`/urls/${randomKey}`);
   console.log(urlDatabase);
   res.send("Ok");  
          // Respond with 'Ok' (we will replace this)
 });
 
-
-
-app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id]};
-  res.render("urls_show", templateVars);
-});
 
 app.get("/", (req, res) => {
   res.send("Hello!");
