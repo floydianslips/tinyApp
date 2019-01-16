@@ -54,6 +54,11 @@ app.post("/urls", (req, res) => {
   console.log(urlDatabase);
 });
 
+app.post('/urls/:id/delete', (req, res) => {
+  delete urlDatabase[req.params.id];
+  res.redirect(301, '/urls');
+});
+
 app.get("/u/:shortURL", (req, res) => {
   res.redirect(301, urlDatabase[req.params.shortURL]);
 });
