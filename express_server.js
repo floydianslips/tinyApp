@@ -8,6 +8,11 @@ app.use(cookieParser());
 let templateVars = {
 };
 
+var urlDatabase = {
+  "b2xVn2": "http://www.lighthouselabs.ca",
+  "9sm5xK": "http://www.google.com"
+};
+
 //create random 6 charactor string for shortUrl key
 function generateRandomString() { //borrowed from https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
   var text = "";
@@ -21,10 +26,7 @@ function generateRandomString() { //borrowed from https://stackoverflow.com/ques
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
-var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
-};
+
 
 app.post("/login", (req, res) => {
   let templateVars = { userName: req.cookies.username };
@@ -33,6 +35,11 @@ app.post("/login", (req, res) => {
   templateVars.username = userName;
   console.log("username", userName);
   res.redirect(301, "/urls");
+});
+
+app.get("/register", (req, res) => {
+  let templateVars = { userName: req.cookies.username };
+  res.render('urls_register', templateVars);
 });
 
 app.post("/logout", (req, res) => {
@@ -98,6 +105,3 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
-
-// res.render("urls_index", templateVars);
-// console.log(req.cookies);
