@@ -52,7 +52,7 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id]};
+  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id], userName: req.cookies.username};
   res.render("urls_show", templateVars);
 });
 
@@ -69,7 +69,7 @@ app.post('/urls/:id/delete', (req, res) => {
 });
 
 app.post("/urls/:id/update", (req, res) => {
-  // let shortURL = urlDatabase[0];
+  let templateVars = { userName: req.cookies.username };
   urlDatabase[req.params.id] = "http://" + req.body.longURL;
   res.redirect(301, "/urls");
 });
