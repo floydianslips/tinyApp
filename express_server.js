@@ -1,9 +1,12 @@
 
 const express = require("express");
-const cookie =require("cookie-parser")
+const cookieParser =require("cookie-parser");
 const app = express();
 const PORT = 8080; // default port 8080
 app.set('view engine', 'ejs');
+app.use(cookieParser());
+let templateVars = {
+};
 
 //create random 6 charactor string for shortUrl key
 function generateRandomString() { //borrowed from https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
@@ -24,19 +27,22 @@ var urlDatabase = {
 };
 
 app.post("/login" , (req, res) => {
+  let templateVars = { userName: req.cookies.username };
   let userName = req.body.userName;
   res.cookie("username", userName);
+  templateVars.username = userName;
   console.log("username", userName);
   res.redirect(301, "/urls");
 });
 
 app.get('/urls', (req, res) => {
-  let templateVars = { urls: urlDatabase };
+  let templateVars = { urls: urlDatabase, userName: req.cookies.username };
   res.render('urls_index', templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  let templateVars = { userName: req.cookies.username };
+  res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:id", (req, res) => {
@@ -63,18 +69,22 @@ app.post("/urls/:id/update", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
+  let templateVars = { userName: req.cookies.username };
   res.redirect(301, urlDatabase[req.params.shortURL]);
 });
 
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  let templateVars = { userName: req.cookies.username };
+  res.redirect(302, "/urls");
 });
 
 app.get("/urls.json", (req, res) => {
+  let templateVars = { userName: req.cookies.username };
   res.json(urlDatabase);
 });
 
 app.get("/hello", (req, res) => {
+  let templateVars = { userName: req.cookies.username };
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
@@ -82,3 +92,5 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
+// res.render("urls_index", templateVars);
+// console.log(req.cookies);
