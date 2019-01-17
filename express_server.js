@@ -16,8 +16,8 @@ var urlDatabase = {
 const users = { 
   "tim": {
     id: "turboTim", 
-    email: "user@example.com", 
-    password: "purple-monkey-dinosaur"
+    email: "tim", 
+    password: "tim"
   },
  "user2RandomID": {
     id: "user2RandomID", 
@@ -48,7 +48,7 @@ app.post("/login", (req, res) => {
   let userName = req.body.userName;
   res.cookie("username", userName);
   templateVars.username = userName;
-  console.log("username", userName);
+  // console.log("username", userName);
   res.redirect(301, "/urls");
 });
 
@@ -57,12 +57,28 @@ app.get("/register", (req, res) => {
   res.render('urls_register', templateVars);
 });
 
+app.get("/urls/:id", (req, res) => {
+  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id], userName: req.cookies.username};
+  res.render("urls_show", templateVars);
+});
+
+
 app.post("/register", (req, res) => {
   let templateVars = { userName: req.cookies.username };
-  console.log(req.body)
-  let id = generateRandomString(9, possibleNum);
-  users.id = { id: id, email: req.body.email, password: req.body.password };
-  res.redirect("/urls");
+    
+  
+  for(var value in users) {
+      if (users[value].email !== req.body.email && req.body.email && req.body.password) {
+        let id = generateRandomString(9, possibleNum);
+        users[id] = { id: id, email: req.body.email, password: req.body.password };
+        res.cookie("user_id", id);
+        res.redirect("/urls");
+        return;
+      } else { res.status(400);
+         res.render("urls_register", templateVars);
+      return;
+        }
+    }
 });
 
 app.post("/logout", (req, res) => {
@@ -81,16 +97,12 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new", templateVars);
 });
 
-app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id], userName: req.cookies.username};
-  res.render("urls_show", templateVars);
-});
 
 app.post("/urls", (req, res) => {
   let randomKey = generateRandomString(6, possibleAll);
   urlDatabase[randomKey] = "http://" + req.body.longURL;
   res.redirect(`/urls/${randomKey}`);
-  console.log(urlDatabase);
+  // console.log(urlDatabase);
 });
 
 app.post('/urls/:id/delete', (req, res) => {
@@ -127,4 +139,3 @@ app.get("/hello", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
-
