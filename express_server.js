@@ -26,12 +26,18 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-app.post("/login" , (req, res) => {
+app.post("/login", (req, res) => {
   let templateVars = { userName: req.cookies.username };
   let userName = req.body.userName;
   res.cookie("username", userName);
   templateVars.username = userName;
   console.log("username", userName);
+  res.redirect(301, "/urls");
+});
+
+app.post("/logout", (req, res) => {
+  let templateVars = { userName: req.cookies.username };
+  res.clearCookie("username", req.cookies.username);
   res.redirect(301, "/urls");
 });
 
@@ -91,6 +97,7 @@ app.get("/hello", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
 
 // res.render("urls_index", templateVars);
 // console.log(req.cookies);
