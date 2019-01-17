@@ -1,26 +1,17 @@
 
 const express = require("express");
+const cookie =require("cookie-parser")
 const app = express();
 const PORT = 8080; // default port 8080
 app.set('view engine', 'ejs');
 
-
-// npm install generate-password --save
-// var generator = require('generate-password');
- 
-// var password = generator.generate({
-//     length: 10,
-//     numbers: true
-// });
-
+//create random 6 charactor string for shortUrl key
 function generateRandomString() { //borrowed from https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
   var text = "";
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
   for (var i = 0; i < 6; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-  
   return text;
 }
 
@@ -32,6 +23,13 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+app.post("/login" , (req, res) => {
+  let userName = req.body.userName;
+  res.cookie("username", userName);
+  console.log("username", userName);
+  res.redirect(301, "/urls");
+});
+
 app.get('/urls', (req, res) => {
   let templateVars = { urls: urlDatabase };
   res.render('urls_index', templateVars);
@@ -40,7 +38,6 @@ app.get('/urls', (req, res) => {
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
-
 
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id]};
