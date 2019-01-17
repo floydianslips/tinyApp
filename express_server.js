@@ -13,13 +13,28 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-//create random 6 charactor string for shortUrl key
-function generateRandomString() { //borrowed from https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
-  var text = "";
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+const users = { 
+  "tim": {
+    id: "turboTim", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+}
 
-  for (var i = 0; i < 6; i++)
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
+//create random 6 charactor string for shortUrl key
+const possibleAll = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+const possibleNum = "1234567890";
+
+function generateRandomString(num, type) { //borrowed from https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
+  var text = "";
+  
+  for (var i = 0; i < num; i++)
+    text += type.charAt(Math.floor(Math.random() * type.length));
   return text;
 }
 
@@ -40,6 +55,14 @@ app.post("/login", (req, res) => {
 app.get("/register", (req, res) => {
   let templateVars = { userName: req.cookies.username };
   res.render('urls_register', templateVars);
+});
+
+app.post("/register", (req, res) => {
+  let templateVars = { userName: req.cookies.username };
+  console.log(req.body)
+  let id = generateRandomString(9, possibleNum);
+  users.id = { id: id, email: req.body.email, password: req.body.password };
+  res.redirect("/urls");
 });
 
 app.post("/logout", (req, res) => {
@@ -64,7 +87,7 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  let randomKey = generateRandomString();
+  let randomKey = generateRandomString(6, possibleAll);
   urlDatabase[randomKey] = "http://" + req.body.longURL;
   res.redirect(`/urls/${randomKey}`);
   console.log(urlDatabase);
