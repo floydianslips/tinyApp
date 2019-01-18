@@ -8,19 +8,21 @@
   <header>
   <% include partials/_header %>
   </header>
-
   <body>
     <ul>
-    <% for(var url in urls) { %>
+      <% for(var urls in userUrls) { %>
       <li>
-      <form method="POST" action="/urls/<%= url %>/delete">
-      <%= urls[url].url + ":    " + url %>
-      <a href="/urls/<%= url %>">edit</a>
+     
+      <form method="POST" action="/userUrls/<%= urls %>/delete">
+      <%= userUrls[urls].url %>
+      <a href="/userUrls/<%= urls %>">edit</a>
       <button>Delete URL</button></form>
       </li>
-    <% } %>
+     <% } %>
     </ul>
+
     <a href="/urls/new">Create a New Shortened URL</a>
+
     </li>
     </ul>
   </body>
