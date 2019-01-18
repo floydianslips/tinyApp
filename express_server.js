@@ -117,8 +117,10 @@ app.get('/urls', (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
+  if (req.cookies.user_id) {
   res.render("urls_new");
-  });
+  } else { res.render("urls_login", templateVars); }
+});
 
 
 
@@ -132,7 +134,7 @@ app.post("/urls", (req, res) => {
     res.redirect(`/urls/${randomKey}`);
 
   } else { 
-    res.redirect(301, "/urls"); 
+    res.render("urls_login", templateVars); 
   }
 
 });
