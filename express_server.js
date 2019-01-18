@@ -107,18 +107,21 @@ app.get('/urls', (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   let templateVars = { user: users[req.cookies.user_id] };
-  if (req.cookies.user_id) {
-    delete urlDatabase[req.params.id];
+  // if (req.cookies.user_id) {
+    // delete urlDatabase[req.params.id];
     res.redirect(301, "/urls");
-    } else { res.render("urls_register", templateVars); }
+    // } else { res.render("urls_register", templateVars); }
   });
 
 
 
 app.post("/urls", (req, res) => {
-  let randomKey = generateRandomString(6, possibleAll);
-  urlDatabase[randomKey] = "http://" + req.body.longURL;
-  res.redirect(`/urls/${randomKey}`);
+  let templateVars = { user: users[req.cookies.user_id] };
+  if (req.cookies.user_id) {
+    let randomKey = generateRandomString(6, possibleAll);
+    urlDatabase[randomKey] = "http://" + req.body.longURL;
+    res.redirect(`/urls/${randomKey}`);
+  } else { res.redirect(301, "/urls"); }
 });
 
 app.post('/urls/:id/delete', (req, res) => {
@@ -126,13 +129,15 @@ app.post('/urls/:id/delete', (req, res) => {
   if (req.cookies.user_id) {
   delete urlDatabase[req.params.id];
   res.redirect(301, "/urls");
-  } else { res.render("urls_register", templateVars); }
+  } else { res.redirect(301, "/register"); }
 });
 
 app.post("/urls/:id/update", (req, res) => {
   let templateVars = { user: users[req.cookies.user_id] };
+  if (req.cookies.user_id) {
   urlDatabase[req.params.id] = "http://" + req.body.longURL;
   res.redirect(301, "/urls");
+  } else { res.redirect(301, "/register"); }
 });
 
 app.get("/u/:shortURL", (req, res) => {
