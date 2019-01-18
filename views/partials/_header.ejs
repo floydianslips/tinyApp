@@ -1,14 +1,13 @@
 <title>My Tiny App</title>
-
-
-<% if (!userName) { %>
+<% if (user) { %>
+<form method="POST" action="/logout">
+<p>Your userName is:  <%= user.id %></p>
+<input type="submit" value="Logout Dog">
+<% } %>
+<% if (!user) { %>
 <form method="POST" action="/login">
 <label for="userName">Provide a Sweet Username</label>
 <input id="userName" type="text" name="userName" placeholder="userID">
 <input type="submit" value="Submit"> 
-<% } else { %>
-  <form method="POST" action="/logout">
-<p>Your userName is:  <%= userName %></p>
-<input type="submit" value="Logout Dog">
-<% } %> 
+<% } %>
 </form>
