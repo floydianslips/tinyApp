@@ -65,11 +65,9 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
   let templateVars = { user: users[req.cookies.user_id] };
-  console.log(req.body)
   for(var value in users) {
     if (users[value].email === req.body.email && users[value].password === req.body.password) {
       
-    console.log("help");
       let id = generateRandomString(9, possibleNum);
       users[id] = { id: id, email: req.body.email, password: req.body.password };
       res.cookie("user_id", id);
@@ -86,7 +84,7 @@ app.post("/register", (req, res) => {
   for(var value in users) {
       if (users[value].email !== req.body.email && req.body.email && req.body.password) {
         let id = generateRandomString(9, possibleNum);
-        users[id] = { id: id, email: req.body.email, password: req.body.password };
+        users[id] = { id: id, email: req.body.email, pasnewsword: req.body.password };
         res.cookie("user_id", id);
         res.redirect("/urls");
       
@@ -106,10 +104,11 @@ app.get('/urls', (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = { user: users[req.cookies.user_id] };
+  res.render("urls_new");
+  // let templateVars = { user: users[req.cookies.user_id] };
   // if (req.cookies.user_id) {
     // delete urlDatabase[req.params.id];
-    res.redirect(301, "/urls");
+    // res.redirect(301, "/urls");
     // } else { res.render("urls_register", templateVars); }
   });
 
@@ -117,11 +116,17 @@ app.get("/urls/new", (req, res) => {
 
 app.post("/urls", (req, res) => {
   let templateVars = { user: users[req.cookies.user_id] };
+  console.log(req.cookies)
   if (req.cookies.user_id) {
+    console.log(req.body.longURL)
     let randomKey = generateRandomString(6, possibleAll);
-    urlDatabase[randomKey] = "http://" + req.body.longURL;
+    urlDatabase[randomKey] = { url: "http://" + req.body.longURL, userID: req.cookies.user_id }
+    console.log(urlDatabase);
     res.redirect(`/urls/${randomKey}`);
-  } else { res.redirect(301, "/urls"); }
+  } else { 
+    res.redirect(301, "/urls"); 
+  }
+
 });
 
 app.post('/urls/:id/delete', (req, res) => {
