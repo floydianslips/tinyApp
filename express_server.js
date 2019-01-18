@@ -159,8 +159,9 @@ app.post("/urls/:id/update", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  let templateVars = { user: users[req.cookies.user_id] };
-  res.redirect(301, urlDatabase[req.params.shortURL]);
+  // let templateVars = { user: users[req.cookies.user_id] };
+  console.log(req.params.shortURL);
+  res.redirect(301, urlDatabase[req.params.shortURL].url);
 });
 
 app.get("/", (req, res) => {
@@ -184,7 +185,7 @@ app.listen(PORT, () => {
 
 function getUrlsForUserById (user) {
   let usersShorUrls = {};
-  for (var shortUrl in urlDatabase) {
+  for (let shortUrl in urlDatabase) {
     if (urlDatabase[shortUrl].userID === user) {
     usersShorUrls[shortUrl] = urlDatabase[shortUrl];
     }
