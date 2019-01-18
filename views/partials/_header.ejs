@@ -1,13 +1,3 @@
 <title>My Tiny App</title>
-<% if (user) { %>
-<form method="POST" action="/logout">
-<p>Your userName is:  <%= user.id %></p>
-<input type="submit" value="Logout Dog">
-<% } %>
-<% if (!user) { %>
-<form method="POST" action="/login">
-<label for="userName">Provide a Sweet Username</label>
-<input id="userName" type="text" name="userName" placeholder="userID">
-<input type="submit" value="Submit"> 
-<% } %>
-</form>
+<a href="/register">Time to register yo!</a>
+<a href="/login">You need to login son.</a>
