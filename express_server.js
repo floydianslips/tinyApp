@@ -61,6 +61,8 @@ app.get("/urls/:id", (req, res) => {
     res.send("Sorry that shortened URL doesn't exist within the bounds of reality");
   } else if (req.session.user_id === urlDatabase[req.params.id].userID) {
     res.render("urls_show", templateVars);
+  } else if (req.session.user_id && req.session.user_id) {
+    res.send("<h2>You do not own this so you can modify it:</h2><a href=/urls>Back to your URLs</a>");
   }
   else { res.render("urls_login", templateVars); }
 });
@@ -117,7 +119,7 @@ app.get('/urls', (req, res) => {
   let templateVars = { userUrls: getUrlsForUserById(req.session.user_id), user: users[req.session.user_id] };
   if (req.session.user_id) {
   res.render('urls_index', templateVars);
-  } else { res.send("You are not logged in, please login"); }
+  } else { res.send("<h2>You are not logged in.</h2><a href=/login>Login</a>"); }
 });
 
 app.get("/urls/new", (req, res) => {
