@@ -2,6 +2,7 @@
 const express = require("express");
 const cookieParser =require("cookie-parser");
 const app = express();
+const bcrypt = require('bcrypt');
 const PORT = 8080; // default port 8080
 app.set('view engine', 'ejs');
 app.use(cookieParser());
@@ -26,11 +27,11 @@ const users = {
     email: "dan@dan.com", 
     password: "dan"
   },
-  "123456789": {
-    id: "123456789",
-    email: "123456789@gmail.com",
-    password: "123"
-  }
+  "368466822": { 
+    id: "368466822",
+    email: 'nomore2pick@gmail.com',
+    password: '$2b$10$NgKYiA7h5iC/VKotyDpXK.voW/4pg9A2YT.fJNlys80txvZ083mDm' }
+  
 };
 
 //create random 6 charactor string for shortUrl key
@@ -54,11 +55,7 @@ app.post("/logout", (req, res) => {
   res.render("urls_login", templateVars);
 });
 
-app.get("/register", (req, res) => {
-  let templateVars = { user: users[req.cookies.user_id] };
-  console.log(req.cookies.user_id)
-  res.render('urls_register', templateVars);
-});
+
 
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id], user: users[req.cookies.user_id]};
@@ -75,13 +72,13 @@ app.post("/login", (req, res) => {
   let user;
   for(var value in users) {
     if (users[value].email === req.body.email) {
-      if (users[value].password === req.body.password) {
+      if (bcrypt.compareSync(req.body.password, users[value].password)) {
         user = users[value];
       }
     }    
   }
     if (user) {
-      console.log('help')
+      console.log('help');
       res.cookie("user_id", user.id);
       res.redirect("/urls");
       return;
@@ -91,14 +88,23 @@ app.post("/login", (req, res) => {
   
 });
 
+app.get("/register", (req, res) => {
+  let templateVars = { user: users[req.cookies.user_id] };
+  console.log(req.cookies.user_id)
+  res.render('urls_register', templateVars);
+});
+
 app.post("/register", (req, res) => {
   let templateVars = { user: users[req.cookies.user_id] };
   // console.log(req.body)
+  const password = req.body.password;
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  console.log(password);
   for(var value in users) {
       if (users[value].email !== req.body.email && req.body.email && req.body.password) {
         let id = generateRandomString(9, possibleNum);
         console.log(id);
-        users[id] = { id: id, email: req.body.email, password: req.body.password };
+        users[id] = { id: id, email: req.body.email, password: hashedPassword };
         res.cookie("user_id", id);
         res.redirect("/urls");
         console.log(users)
@@ -123,8 +129,6 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new");
   } else { res.render("urls_login", templateVars); }
 });
-
-
 
 app.post("/urls", (req, res) => {
   let templateVars = { user: users[req.cookies.user_id] };
