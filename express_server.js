@@ -58,7 +58,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.post("/logout", (req, res) => {
   let templateVars = { user: users[req.session.user_id] };
-  res.clearCookie("user_id", req.session.user_id);
+  req.session = null;
   res.render("urls_login", templateVars);
 });
 
@@ -98,7 +98,7 @@ app.post("/login", (req, res) => {
 
 app.get("/register", (req, res) => {
   let templateVars = { user: users[req.session.user_id] };
-  console.log(req.session.user_id)
+  console.log(users)
   res.render('urls_register', templateVars);
 });
 
@@ -107,15 +107,16 @@ app.post("/register", (req, res) => {
   // console.log(req.body)
   const password = req.body.password;
   const hashedPassword = bcrypt.hashSync(password, 10);
-  console.log(password);
+  // console.log("id", req.session.user_id)
   for(var value in users) {
       if (users[value].email !== req.body.email && req.body.email && req.body.password) {
         let id = generateRandomString(9, possibleNum);
         console.log(id);
+        
         users[id] = { id: id, email: req.body.email, password: hashedPassword };
-        req.session.user_id = user.id;
-        res.redirect("/urls");
-        console.log(users)
+        req.session.user_id = users[id].id;
+        res.render("urls_index", templateVars);
+        console.log(getUrlsForUserById("req.session.user_id"));
         return;
       } else { res.status(400);
          res.render("urls_register", templateVars);
@@ -126,7 +127,7 @@ app.post("/register", (req, res) => {
 
 app.get('/urls', (req, res) => {
   let templateVars = { userUrls: getUrlsForUserById(req.session.user_id), user: users[req.session.user_id] };
-  console.log(getUrlsForUserById(req.session.user_id));
+  console.log("temp", typeof getUrlsForUserById(req.session.user_id));
   if (req.session.user_id) {
   res.render('urls_index', templateVars);
   } else { res.render("urls_login", templateVars) ;}
@@ -142,7 +143,7 @@ app.post("/urls", (req, res) => {
   let templateVars = { user: users[req.session.user_id] };
   if (req.session.user_id) {
     let randomKey = generateRandomString(6, possibleAll);
-    console.log(req.body.longURL)
+    // console.log(req.body.longURL)
     urlDatabase[randomKey] = { url: "http://" + req.body.longURL, userID: req.session.user_id };
     // console.log(urlDatabase)
     res.redirect(`/urls/${randomKey}`);
