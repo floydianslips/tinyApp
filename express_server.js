@@ -20,7 +20,7 @@ const urlDatabase = {
   "b2xVn2": {url: "http://www.lighthouselabs.ca", userID: "dan" },
   "9sm5xK": {url: "http://www.google.com", userID: "368466822" },
   "zZOJFS": {url:  "http://www.amazon.ca", userID: "368466822" },
-  //  "aaaaaa": {url: "http://gmail.com", userID: "tim" }
+   "aaaaaa": {url: "http://gmail.com", userID: "tim" }
 };
 
 const users = { 
@@ -100,10 +100,8 @@ app.get("/register", (req, res) => {
 
 app.post("/register", (req, res) => {
   let templateVars = { user: users[req.session.user_id] };
-  // console.log(req.body)
   const password = req.body.password;
   const hashedPassword = bcrypt.hashSync(password, 10);
-  // console.log("id", req.session.user_id)
   for(var value in users) {
       if (users[value].email !== req.body.email && req.body.email && req.body.password) {
         let id = generateRandomString(9, possibleNum);
@@ -111,7 +109,7 @@ app.post("/register", (req, res) => {
         
         users[id] = { id: id, email: req.body.email, password: hashedPassword };
         req.session.user_id = users[id].id;
-        res.render("urls_index", templateVars);
+        res.redirect(301, "/urls");
         console.log("id", getUrlsForUserById("tim"))
         console.log(typeof "tim")
         console.log("get for user", req.session.user_id)
