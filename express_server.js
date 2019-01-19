@@ -55,9 +55,23 @@ app.post("/logout", (req, res) => {
 
 });
 
+app.get("/urls/new", (req, res) => {
+  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id], user: users[req.session.user_id] }
+   // let templateVars = { user: users[req.session.user_id] };
+   // if (!req.session.user_id) {  
+   res.render("urls_new", templateVars);
+   // } else { res.render("urls_login", templateVars); }
+ });
+
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id], user: users[req.session.user_id] };
-  if (!urlDatabase[req.params.id] && req.params.id !== "new") {
+  console.log(typeof req.params.id);
+  if (req.params.id === "new") {
+    console.log("help");
+    res.redirect(303, "/urls/new");
+    return;
+   }
+  else if (!urlDatabase[req.params.id]) {
     res.send("Sorry that shortened URL doesn't exist within the bounds of reality");
   } else if (req.session.user_id === urlDatabase[req.params.id].userID) {
     res.render("urls_show", templateVars);
@@ -79,8 +93,8 @@ app.post("/login", (req, res) => {
     if (users[value].email === req.body.email) {
       if (bcrypt.compareSync(req.body.password, users[value].password)) {
         user = users[value];
-      }
-}    
+    }
+      }    
   }
     if (user) {
       req.session.user_id = user.id;
@@ -117,17 +131,12 @@ app.post("/register", (req, res) => {
 
 app.get('/urls', (req, res) => {
   let templateVars = { userUrls: getUrlsForUserById(req.session.user_id), user: users[req.session.user_id] };
-  if (req.session.user_id) {
+  // if (req.session.user_id) {
   res.render('urls_index', templateVars);
-  } else { res.send("<h2>You are not logged in.</h2><a href=/login>Login</a>"); }
+  // } else { res.send("<h2>You are not logged in.</h2><a href=/login>Login</a>"); }
 });
 
-app.get("/urls/new", (req, res) => {
-  let templateVars = { user: users[req.session.user_id] };
-  if (!req.session.user_id) {  
-    res.render("urls_new", templateVars);
-  } else { res.render("urls_login", templateVars); }
-});
+
 
 app.post("/urls", (req, res) => {
   let templateVars = { user: users[req.session.user_id] };
