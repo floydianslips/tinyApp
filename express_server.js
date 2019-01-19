@@ -55,16 +55,14 @@ app.post("/logout", (req, res) => {
 
 });
 
-
-
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id], user: users[req.session.user_id] };
-  if (!urlDatabase[req.params.id]) {
+  if (!urlDatabase[req.params.id] && req.params.id !== "new") {
     res.send("Sorry that shortened URL doesn't exist within the bounds of reality");
+  } else if (req.session.user_id === urlDatabase[req.params.id].userID) {
+    res.render("urls_show", templateVars);
   }
-  if (req.session.user_id) {  
-  res.render("urls_show", templateVars);
-  } else { res.render("urls_login", templateVars); }
+  else { res.render("urls_login", templateVars); }
 });
 
 app.get("/login", (req, res) => {
@@ -153,7 +151,7 @@ app.post('/urls/:id/delete', (req, res) => {
 app.post("/urls/:id/update", (req, res) => {
   let templateVars = { user: users[req.session.user_id] };
   if (req.session.user_id === urlDatabase[req.params.id].userID) {
-  urlDatabase[req.params.id] = { url:"http://" + req.body.createLongURL, userID: req.session.user_id }
+  urlDatabase[req.params.id] = { url:"http://" + req.body.createLongURL, userID: req.session.user_id };
   res.redirect(301, "/urls");
   } else if (req.session.user_id && req.session.user_id !== urlDatabase[req.params.id].userID) {
     res.send("Sorry you can't play with it if you don't own it.");
