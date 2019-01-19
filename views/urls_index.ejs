@@ -13,12 +13,12 @@
   <ul>
       <% for(var urls in userUrls) { %>
       <li>
-      <%= userUrls[urls].url %>
+      <%= urls + ": " + userUrls[urls].url %>
      
       <form method="POST" action="/urls/<%= urls %>/delete">
       <button>Delete URL</button></form>
       
-      <a href="/userUrls/<%= urls %>">edit</a>
+      <a href="/urls/<%= urls %>">edit</a>
       
       </li>
      <% } %>

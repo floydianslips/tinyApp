@@ -59,7 +59,9 @@ app.post("/logout", (req, res) => {
 
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id], user: users[req.session.user_id]};
+  if (req.session.user_id) {  
   res.render("urls_show", templateVars);
+  } else { res.render("urls_login", templateVars); }
 });
 
 app.get("/login", (req, res) => {
@@ -128,12 +130,13 @@ app.get('/urls', (req, res) => {
   let templateVars = { userUrls: getUrlsForUserById(req.session.user_id), user: users[req.session.user_id] };
   if (req.session.user_id) {
   res.render('urls_index', templateVars);
-  } else { res.send("You are not logged in, please login")};
+  } else { res.send("You are not logged in, please login"); }
 });
 
 app.get("/urls/new", (req, res) => {
-  if (req.session.user_id) {
-  res.render("urls_new");
+  let templateVars = { user: users[req.session.user_id] };
+  if (!req.session.user_id) {  
+    res.render("urls_new", templateVars);
   } else { res.render("urls_login", templateVars); }
 });
 
@@ -174,6 +177,9 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.get("/", (req, res) => {
   let templateVars = { user: users[req.session.user_id] };
+  if (req.session.user_id) {
+    res.redirect(301, "/urls");
+    } else { res.redirect(301, "/login"); }
   res.redirect(302, "/urls");
 });
 
