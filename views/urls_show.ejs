@@ -11,10 +11,10 @@
   
   <body>
     <h1>ShortURL: <%= shortURL %></h1>
-    <form action="/urls/"<%= shortURL %>"/update" method="POST">
-    <label for="longURL">Enter New URL Por Favor:</label> 
+    <form method="POST" action="/urls/<%= shortURL %>/update">
+    <label for="createNewLongUrl">Enter URL without http: </label> 
     
-    <input id="longURL" type="text" name="longURL" placeholder="http://">
+    <input id="createNewLongUrl" type="text" name="createLongURL" placeholder=<%= longURL.url %>>
     <button>Good Vibes</button>
     </form>
     </body>

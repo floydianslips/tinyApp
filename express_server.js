@@ -58,7 +58,7 @@ app.post("/logout", (req, res) => {
 
 
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id], user: users[req.session.user_id]};
+  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id], user: users[req.session.user_id] };
   if (req.session.user_id) {  
   res.render("urls_show", templateVars);
   } else { res.render("urls_login", templateVars); }
@@ -66,7 +66,6 @@ app.get("/urls/:id", (req, res) => {
 
 app.get("/login", (req, res) => {
   let templateVars = { user: users[req.session.user_id] };
-  console.log()
   res.render("urls_login");
 });
 
@@ -78,23 +77,19 @@ app.post("/login", (req, res) => {
       if (bcrypt.compareSync(req.body.password, users[value].password)) {
         user = users[value];
       }
-  console.log(users[value].password)
 }    
   }
     if (user) {
-      console.log('help');
       req.session.user_id = user.id;
       res.redirect("/urls");
       return;
     } else { res.render("urls_login", templateVars);
     return;
     }
-  console.log(user.id)
 });
 
 app.get("/register", (req, res) => {
   let templateVars = { user: users[req.session.user_id] };
-  console.log(users)
   res.render('urls_register', templateVars);
 });
 
@@ -105,17 +100,10 @@ app.post("/register", (req, res) => {
   for(var value in users) {
       if (users[value].email !== req.body.email && req.body.email && req.body.password) {
         let id = generateRandomString(9, possibleNum);
-        // console.log(id);
         
         users[id] = { id: id, email: req.body.email, password: hashedPassword };
         req.session.user_id = users[id].id;
         res.redirect(301, "/urls");
-        console.log("id", getUrlsForUserById("tim"))
-        console.log(typeof "tim")
-        console.log("get for user", req.session.user_id)
-        console.log(typeof req.session.user_id)
-      
-        console.log("get url", getUrlsForUserById("968751411"));
         return;
       } else { res.status(400);
          res.render("urls_register", templateVars);
@@ -161,15 +149,16 @@ app.post('/urls/:id/delete', (req, res) => {
 
 app.post("/urls/:id/update", (req, res) => {
   let templateVars = { user: users[req.session.user_id] };
-  if (req.session.user_id) {
-  urlDatabase[req.params.id] = "http://" + req.body.longURL;
+  console.log(req.body);
+  if (req.session.user_id === urlDatabase[req.params.id].userID) {
+  urlDatabase[req.params.id] = { url:"http://" + req.body.createLongURL, userID: req.session.user_id }
+  // console.log(urlDatabase)
   res.redirect(301, "/urls");
   } else { res.redirect(301, "/register"); }
 });
 
 app.get("/u/:shortURL", (req, res) => {
   // let templateVars = { user: users[req.session.user_id] };
-  console.log(req.params.shortURL);
   res.redirect(301, urlDatabase[req.params.shortURL].url);
 });
 
