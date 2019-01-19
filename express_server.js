@@ -24,16 +24,8 @@ const urlDatabase = {
 };
 
 const users = { 
-  "tim": {
-    id: "tim", 
-    email: "tim@tim.com", 
-    password: "tim"
-  },
- "dan": {
-    id: "dan", 
-    email: "dan@dan.com", 
-    password: "dan"
-  },
+  
+  
   "368466822": { 
     id: "368466822",
     email: 'nomore2pick@gmail.com',
@@ -58,8 +50,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.post("/logout", (req, res) => {
   let templateVars = { user: users[req.session.user_id] };
-  req.session = null;
+  req.session = null; 
   res.render("urls_login", templateVars);
+
 });
 
 
@@ -71,6 +64,7 @@ app.get("/urls/:id", (req, res) => {
 
 app.get("/login", (req, res) => {
   let templateVars = { user: users[req.session.user_id] };
+  console.log()
   res.render("urls_login");
 });
 
@@ -111,12 +105,17 @@ app.post("/register", (req, res) => {
   for(var value in users) {
       if (users[value].email !== req.body.email && req.body.email && req.body.password) {
         let id = generateRandomString(9, possibleNum);
-        console.log(id);
+        // console.log(id);
         
         users[id] = { id: id, email: req.body.email, password: hashedPassword };
         req.session.user_id = users[id].id;
         res.render("urls_index", templateVars);
-        console.log(getUrlsForUserById("req.session.user_id"));
+        console.log("id", getUrlsForUserById("tim"))
+        console.log(typeof "tim")
+        console.log("get for user", req.session.user_id)
+        console.log(typeof req.session.user_id)
+      
+        console.log("get url", getUrlsForUserById("968751411"));
         return;
       } else { res.status(400);
          res.render("urls_register", templateVars);
@@ -127,7 +126,7 @@ app.post("/register", (req, res) => {
 
 app.get('/urls', (req, res) => {
   let templateVars = { userUrls: getUrlsForUserById(req.session.user_id), user: users[req.session.user_id] };
-  console.log("temp", typeof getUrlsForUserById(req.session.user_id));
+  console.log("temp", req.session.user_id);
   if (req.session.user_id) {
   res.render('urls_index', templateVars);
   } else { res.render("urls_login", templateVars) ;}
