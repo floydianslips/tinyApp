@@ -59,6 +59,9 @@ app.post("/logout", (req, res) => {
 
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id], user: users[req.session.user_id] };
+  if (!urlDatabase[req.params.id]) {
+    res.send("Sorry that shortened URL doesn't exist within the bounds of reality");
+  }
   if (req.session.user_id) {  
   res.render("urls_show", templateVars);
   } else { res.render("urls_login", templateVars); }
@@ -149,17 +152,19 @@ app.post('/urls/:id/delete', (req, res) => {
 
 app.post("/urls/:id/update", (req, res) => {
   let templateVars = { user: users[req.session.user_id] };
-  console.log(req.body);
   if (req.session.user_id === urlDatabase[req.params.id].userID) {
   urlDatabase[req.params.id] = { url:"http://" + req.body.createLongURL, userID: req.session.user_id }
-  // console.log(urlDatabase)
   res.redirect(301, "/urls");
-  } else { res.redirect(301, "/register"); }
+  } else if (req.session.user_id && req.session.user_id !== urlDatabase[req.params.id].userID) {
+    res.send("Sorry you can't play with it if you don't own it.");
+  } else { res.send("You are not logged in and therefore you may not play on the swings"); }
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  // let templateVars = { user: users[req.session.user_id] };
-  res.redirect(301, urlDatabase[req.params.shortURL].url);
+  let templateVars = { user: users[req.session.user_id] };
+  if (!urlDatabase[req.params.id]) {
+    res.send("Sorry that shortened URL doesn't exist within the bounds of reality");
+  } else { res.redirect(301, urlDatabase[req.params.shortURL].url); }
 });
 
 app.get("/", (req, res) => {
