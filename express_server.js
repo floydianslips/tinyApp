@@ -18,8 +18,8 @@ app.set('view engine', 'ejs');
 
 const urlDatabase = {
   "b2xVn2": {url: "http://www.lighthouselabs.ca", userID: "dan" },
-  "9sm5xK": {url: "http://www.google.com", userID: "tim" },
-  "zZOJFS": {url:  "http://www.amazon.ca", userID: "123456789" },
+  "9sm5xK": {url: "http://www.google.com", userID: "368466822" },
+  "zZOJFS": {url:  "http://www.amazon.ca", userID: "368466822" },
   //  "aaaaaa": {url: "http://gmail.com", userID: "tim" }
 };
 
@@ -126,10 +126,9 @@ app.post("/register", (req, res) => {
 
 app.get('/urls', (req, res) => {
   let templateVars = { userUrls: getUrlsForUserById(req.session.user_id), user: users[req.session.user_id] };
-  console.log("temp", req.session.user_id);
   if (req.session.user_id) {
   res.render('urls_index', templateVars);
-  } else { res.render("urls_login", templateVars) ;}
+  } else { res.send("You are not logged in, please login")};
 });
 
 app.get("/urls/new", (req, res) => {
@@ -142,9 +141,7 @@ app.post("/urls", (req, res) => {
   let templateVars = { user: users[req.session.user_id] };
   if (req.session.user_id) {
     let randomKey = generateRandomString(6, possibleAll);
-    // console.log(req.body.longURL)
     urlDatabase[randomKey] = { url: "http://" + req.body.longURL, userID: req.session.user_id };
-    // console.log(urlDatabase)
     res.redirect(`/urls/${randomKey}`);
 
   } else { 
@@ -155,7 +152,6 @@ app.post("/urls", (req, res) => {
 
 app.post('/urls/:id/delete', (req, res) => {
   let templateVars = { user: users[req.session.user_id] }; 
-  // console.log(req.session.user_id);
   if (req.session.user_id === urlDatabase[req.params.id].userID) {
   delete urlDatabase[req.params.id];
   res.redirect(301, "/urls");
