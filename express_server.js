@@ -1,6 +1,4 @@
-
 const express = require("express");
-// const cookieParser =require("cookie-parser");
 const cookieSession = require('cookie-session');
 const app = express();
 const bodyParser = require("body-parser");
@@ -45,8 +43,8 @@ app.post("/login", (req, res) => {
     if (users[value].email === req.body.email) {
       if (bcrypt.compareSync(req.body.password, users[value].password)) {
         user = users[value];
-    }
-      }    
+      }
+    }    
   }
     if (user) {
       req.session.user_id = user.id;
@@ -61,7 +59,6 @@ app.post("/logout", (req, res) => {
   let templateVars = { user: users[req.session.user_id] };
   req.session = null; 
   res.render("urls_login", templateVars);
-
 });
 
 app.get("/", (req, res) => {
