@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <html lang='en'>
+
   <head>
     <title>TinyApp</title>
   </head>
@@ -8,26 +9,21 @@
   <header>
   <% include partials/_header %>
   </header>
+
   <body>
-    
-  <ul>
-      
+    <ul>
       <% for(var urls in userUrls) { %>
-      <li>
-      <%= urls + ": " + userUrls[urls].url %>
-     
-      <form method="POST" action="/urls/<%= urls %>/delete">
-      <button>Delete URL</button></form>
-      
-      <a href="/urls/<%= urls %>">edit</a>
-      
-      </li>
-     <% } %>
+          <li>
+          <%= urls + ": " + userUrls[urls].url %>
+          <form method="POST" action="/urls/<%= urls %>/delete">
+          <button>Delete URL</button></form>
+          <a href="/urls/<%= urls %>">edit</a>
+          </li>
+       <% } %>
     </ul>
 
     <a href="/urls/new">Create a New Shortened URL</a>
 
-    </li>
-    </ul>
   </body>
-  </html>
+
+</html>

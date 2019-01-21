@@ -8,16 +8,17 @@
   <header>
   <% include partials/_header %>
   </header>
-  
+
   <body>
+
     <h1>ShortURL: <%= shortURL %></h1>
     <h2>Redirecting to: <%= longURL.url %><h2>
     <form method="POST" action="/urls/<%= shortURL %>/update">
-
     <label for="createNewLongUrl">To update enter a new URL sans http: </label> 
-    
     <input id="createNewLongUrl" type="text" name="createLongURL" placeholder="example.com">
     <button>Update</button>
     </form>
-    </body>
-  </html>
+
+  </body>
+
+</html>

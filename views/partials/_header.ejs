@@ -1,11 +1,15 @@
 <title>My Tiny App</title>
 
-<% if (user) { %>
-<%= user.email %>
-<form method="POST" action="/logout">
-<input type="submit" value="Logout">
-</form>
-<% } if (!user) { %>
-<a href="/register">Register Here</a>
-<a href="/login">Login</a>
-<% } %>
+<body>
+
+  <% if (user) { %>
+    <%= user.email %>
+    <form method="POST" action="/logout">
+    <input type="submit" value="Logout">
+    </form>
+  <% } if (!user) { %>
+    <a href="/register">Register Here</a>
+    <a href="/login">Login</a>
+  <% } %>
+
+</body>
